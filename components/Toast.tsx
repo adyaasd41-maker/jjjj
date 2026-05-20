@@ -1,1 +1,0 @@
-'use client';export function toast(message:string){const el=document.createElement('div');el.className='fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-2xl bg-slate-950 px-5 py-3 text-white shadow-soft dark:bg-white dark:text-slate-950';el.textContent=message;document.body.appendChild(el);setTimeout(()=>el.remove(),2400)}
