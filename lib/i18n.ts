@@ -1,1 +1,0 @@
-export const t={mn:{dashboard:'Нэгдсэн самбар',family:'Гэр бүл',cafe:'Кафе',analytics:'Аналитик',loans:'Зээл',addTransaction:'Гүйлгээ нэмэх',income:'Орлого',expense:'Зарлага',balance:'Нийт үлдэгдэл',savings:'Хадгаламжийн зорилго',recent:'Сүүлийн гүйлгээ',overspending:'Зарлага төсвөөс давсан байж магадгүй',loanDue:'Зээлийн төлөлт ойртож байна'}};
