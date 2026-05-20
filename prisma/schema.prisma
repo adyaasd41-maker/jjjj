@@ -1,0 +1,97 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionType {
+  income
+  expense
+}
+
+enum Source {
+  family
+  cafe
+}
+
+enum PaymentType {
+  cash
+  card
+  qpay
+}
+
+model User {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  password     String
+  createdAt    DateTime      @default(now())
+  transactions Transaction[]
+  budgets      Budget[]
+  savingsGoals SavingsGoal[]
+  loans        Loan[]
+  sales        CafeSale[]
+}
+
+model Transaction {
+  id        String          @id @default(cuid())
+  userId    String
+  type      TransactionType
+  category  String
+  amount    Decimal         @db.Decimal(12, 2)
+  date      DateTime
+  source    Source
+  note      String?
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime        @default(now())
+
+  @@index([userId, source, date])
+}
+
+model Budget {
+  id          String   @id @default(cuid())
+  userId      String
+  category    String
+  limitAmount Decimal  @db.Decimal(12, 2)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, category])
+}
+
+model SavingsGoal {
+  id            String   @id @default(cuid())
+  userId        String
+  name          String
+  targetAmount  Decimal  @db.Decimal(12, 2)
+  currentAmount Decimal  @db.Decimal(12, 2) @default(0)
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Loan {
+  id               String    @id @default(cuid())
+  userId           String
+  name             String
+  amount           Decimal   @db.Decimal(12, 2)
+  interestRate     Decimal   @db.Decimal(5, 2)
+  monthlyPayment   Decimal   @db.Decimal(12, 2)
+  remainingBalance Decimal   @db.Decimal(12, 2)
+  dueDay           Int       @default(1)
+  lastPaidAt       DateTime?
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model CafeSale {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime
+  cash      Decimal  @db.Decimal(12, 2) @default(0)
+  card      Decimal  @db.Decimal(12, 2) @default(0)
+  qpay      Decimal  @db.Decimal(12, 2) @default(0)
+  note      String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@index([userId, date])
+}
